@@ -1,7 +1,5 @@
 import { createServer } from 'http';
 import fs from 'fs';
-import { URL } from 'node:url';
-
 
 const server = createServer((req, res) => {
   const path = req.url;
