@@ -4,22 +4,31 @@ import { URL } from 'node:url';
 
 
 const server = createServer((req, res) => {
-  const reqUrl = new URL(req);
-  const path = reqUrl.pathname;
+  const path = req.url;
+  const files = {
+    '/': './index.html',
+    '/about': './about.html',
+    '/contact-me': './contact-me.html',
+    'error': './404.html',
+  };
 
-  fs.readFile(`./${path}.html`, 'utf8', (err, data) => {
-    if (err) {
-      fs.readFile('./404.html', 'utf8', (err, data) => {
-        res.statusCode = 404;
-        res.setHeader('Content-Type', 'text/html');
-        res.end(data);
-      })
-      return;
-    }
-    res.statusCode = 200;
-    res.setHeader('Content-type', 'text/html');
-    res.end(data);
-  })
+  if (path in files) {
+    fs.readFile(`${files[path]}`, 'utf8', (err, data) => {
+      res.statusCode = 200;
+      res.setHeader('Content-type', 'text/html');
+      res.end(data);
+    })
+  } else {
+    fs.readFile(`${files['error']}`, 'utf8', (err, data) => {
+      res.statusCode = 404;
+      res.setHeader('Content-type', 'text/html');
+      res.end(data);
+    })
+  }
 })
 
-server.listen(8000);
+const port = process.env.PORT || 3000;
+
+server.listen(port, () => {
+  console.log(`Server started at http://localhost:${port}`);
+});
