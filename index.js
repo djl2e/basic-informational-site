@@ -1,32 +1,23 @@
-import { createServer } from 'http';
-import fs from 'fs';
-
-const server = createServer((req, res) => {
-  const path = req.url;
-  const files = {
-    '/': './index.html',
-    '/about': './about.html',
-    '/contact-me': './contact-me.html',
-    'error': './404.html',
-  };
-
-  if (path in files) {
-    fs.readFile(`${files[path]}`, 'utf8', (err, data) => {
-      res.statusCode = 200;
-      res.setHeader('Content-type', 'text/html');
-      res.end(data);
-    })
-  } else {
-    fs.readFile(`${files['error']}`, 'utf8', (err, data) => {
-      res.statusCode = 404;
-      res.setHeader('Content-type', 'text/html');
-      res.end(data);
-    })
-  }
-})
-
+import express from 'express';
+const app = express();
 const port = process.env.PORT || 3000;
 
-server.listen(port, () => {
+app.get('/', (req, res) => {
+  res.send('Home Page');
+});
+
+app.get('/about', (req, res) => {
+  res.send('About Page');
+});
+
+app.get('/contact-me', (req, res) => {
+  res.send('Contact Page');
+});
+
+app.get('*', (req, res) => {
+  res.send('Error');
+})
+
+app.listen(port, () => {
   console.log(`Server started at http://localhost:${port}`);
 });
