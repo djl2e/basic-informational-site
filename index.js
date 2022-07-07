@@ -1,21 +1,27 @@
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 const app = express();
 const port = process.env.PORT || 3000;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.get('/', (req, res) => {
-  res.send('Home Page');
+  res.sendFile(path.join(__dirname, '/index.html'));
 });
 
 app.get('/about', (req, res) => {
-  res.send('About Page');
+  res.sendFile(path.join(__dirname, '/about.html'));
 });
 
 app.get('/contact-me', (req, res) => {
-  res.send('Contact Page');
+  res.sendFile(path.join(__dirname, '/contact-me.html'));
 });
 
 app.get('*', (req, res) => {
-  res.send('Error');
+  res.sendFile(path.join(__dirname, '/404.html'));
 })
 
 app.listen(port, () => {
